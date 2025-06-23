@@ -1,0 +1,53 @@
+#!/bin/bash
+# Quick wrapper for session indexing and searching
+
+SCRIPT_DIR="$HOME/.claude/scripts"
+
+case "$1" in
+    index|reindex)
+        echo "Reindexing all sessions..."
+        python3 "$SCRIPT_DIR/index-sessions.py"
+        ;;
+    search|s)
+        shift
+        python3 "$SCRIPT_DIR/search-sessions.py" "$@"
+        ;;
+    recent|r)
+        days="${2:-7}"
+        python3 "$SCRIPT_DIR/search-sessions.py" --recent "$days"
+        ;;
+    stats)
+        python3 "$SCRIPT_DIR/search-sessions.py" --stats
+        ;;
+    view|v)
+        if [ -z "$2" ]; then
+            echo "Usage: session-index view <session-id>"
+            exit 1
+        fi
+        python3 "$SCRIPT_DIR/session-viewer.py" "$HOME/.claude/sessions/$2.jsonl"
+        ;;
+    *)
+        echo "Claude Session Index Manager"
+        echo ""
+        echo "Usage:"
+        echo "  session-index index                  - Reindex all sessions"
+        echo "  session-index search <query>         - Search sessions"
+        echo "  session-index recent [days]          - Show recent sessions (default: 7 days)"
+        echo "  session-index stats                  - Show database statistics"
+        echo "  session-index view <session-id>      - View a specific session"
+        echo ""
+        echo "Search options:"
+        echo "  -t file     - Search by file path"
+        echo "  -t tool     - Search by tool usage"
+        echo "  -t topic    - Search by topic"
+        echo "  -t content  - Search in message content"
+        echo "  -l 10       - Limit results (default: 20)"
+        echo "  --json      - Output as JSON"
+        echo ""
+        echo "Examples:"
+        echo "  session-index search searxng"
+        echo "  session-index search -t file .bashrc"
+        echo "  session-index search -t tool Bash"
+        echo "  session-index recent 1"
+        ;;
+esac

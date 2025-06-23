@@ -1,0 +1,11 @@
+#!/bin/bash
+# Secure Claude Code launcher that loads encrypted credentials
+
+# Load secure credentials into environment
+source ~/.claude/scripts/load-secure-credentials.sh
+
+# Build PostgreSQL connection string with loaded password
+export POSTGRES_CONNECTION_STRING="postgresql://searxng_user:${POSTGRES_PASSWORD}@localhost/searxng_cool_music"
+
+# Launch Claude Code with all credentials loaded
+exec claude "$@"

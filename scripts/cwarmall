@@ -1,0 +1,4 @@
+#!/bin/bash
+# 🚀 Claude Cache Warm All - Cache all common file types
+echo "🔥 Warming cache with all common file types..."
+python ~/.claude/cache/claude_cache_daemon.py warm "**/*.py" "**/*.js" "**/*.md" "**/*.json" "**/*.sh" "**/*.txt" "**/*.ts" "**/*.jsx"

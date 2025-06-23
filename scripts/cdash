@@ -1,0 +1,7 @@
+#!/bin/bash
+# 📊 Claude Cache Dashboard - Terminal visualization
+echo "🚀 Claude Cache Terminal Dashboard"
+echo "📊 Beautiful terminal-based monitoring"
+echo "✨ Use 'cviz monitor' for live updates!"
+echo ""
+~/.claude/scripts/cviz overview

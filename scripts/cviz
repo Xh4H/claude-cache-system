@@ -1,0 +1,3 @@
+#!/bin/bash
+# 📊 Claude Cache Visualizer - Beautiful terminal stats and graphs
+python ~/.claude/cache/cache_viz.py "$@"

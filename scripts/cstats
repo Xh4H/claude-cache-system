@@ -1,0 +1,3 @@
+#!/bin/bash
+# 📊 Claude Cache Stats - Lightning-fast statistics
+python ~/.claude/cache/claude_cache_daemon.py stats

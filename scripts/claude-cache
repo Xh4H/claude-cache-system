@@ -1,0 +1,240 @@
+#!/bin/bash
+#
+# Claude Cache Unified CLI
+# Provides unified interface for all cache operations with MCP integration
+#
+
+# Set up paths
+CACHE_DIR="$HOME/.claude/cache"
+SCRIPT_DIR="$HOME/.claude/scripts"
+MCP_TOOL="$CACHE_DIR/mcp_cache_tool.py"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+print_status() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+show_help() {
+    cat << EOF
+Claude Cache Unified CLI v2.0
+
+USAGE:
+    claude-cache <command> [options]
+
+COMMANDS:
+    stats                   Show cache statistics
+    warm <patterns>         Warm cache with file patterns
+    cache <file>           Cache a single file  
+    pattern <glob>         Cache files matching pattern
+    check <file>           Check if file is cached
+    get <file>             Retrieve cached file content
+    clear [--confirm]      Clear entire cache
+    optimize              Run cache optimization
+    dashboard             Start performance dashboard
+    monitor               Show live cache monitoring
+    health                Check cache system health
+    
+EXAMPLES:
+    claude-cache stats
+    claude-cache warm "*.py" "*.js" "*.ts"
+    claude-cache cache src/main.py
+    claude-cache pattern "**/*.json"
+    claude-cache check README.md
+    claude-cache clear --confirm
+    claude-cache dashboard
+    
+INTEGRATION:
+    The cache automatically integrates with Claude Code through MCP tools.
+    Use within Claude sessions for optimal performance.
+
+EOF
+}
+
+# Check if cache system is available
+check_cache_system() {
+    if [[ ! -f "$MCP_TOOL" ]]; then
+        print_error "Cache system not found. Please ensure the cache is properly installed."
+        exit 1
+    fi
+    
+    # Test basic functionality
+    if ! python3 "$MCP_TOOL" stats >/dev/null 2>&1; then
+        print_error "Cache system is not responding properly."
+        exit 1
+    fi
+}
+
+# Execute cache command with error handling
+execute_cache_command() {
+    local cmd="$1"
+    shift
+    local args=("$@")
+    
+    print_status "Executing: $cmd ${args[*]}"
+    
+    if python3 "$MCP_TOOL" "$cmd" "${args[@]}"; then
+        print_success "Command completed successfully"
+        return 0
+    else
+        print_error "Command failed"
+        return 1
+    fi
+}
+
+# Main command processing
+case "$1" in
+    "stats"|"s")
+        check_cache_system
+        execute_cache_command "stats"
+        ;;
+    
+    "warm"|"w")
+        check_cache_system
+        if [[ $# -lt 2 ]]; then
+            print_error "Usage: claude-cache warm <pattern1> [pattern2] ..."
+            exit 1
+        fi
+        shift
+        execute_cache_command "warm" --patterns "$@"
+        ;;
+    
+    "cache"|"c")
+        check_cache_system
+        if [[ $# -ne 2 ]]; then
+            print_error "Usage: claude-cache cache <file_path>"
+            exit 1
+        fi
+        execute_cache_command "cache" --file "$2"
+        ;;
+    
+    "pattern"|"p")
+        check_cache_system
+        if [[ $# -ne 2 ]]; then
+            print_error "Usage: claude-cache pattern <glob_pattern>"
+            exit 1
+        fi
+        execute_cache_command "pattern" --pattern "$2"
+        ;;
+    
+    "check")
+        check_cache_system
+        if [[ $# -ne 2 ]]; then
+            print_error "Usage: claude-cache check <file_path>"
+            exit 1
+        fi
+        execute_cache_command "check" --file "$2"
+        ;;
+    
+    "get")
+        check_cache_system
+        if [[ $# -ne 2 ]]; then
+            print_error "Usage: claude-cache get <file_path>"
+            exit 1
+        fi
+        execute_cache_command "get" --file "$2"
+        ;;
+    
+    "clear")
+        check_cache_system
+        if [[ "$2" == "--confirm" ]]; then
+            print_warning "This will clear the entire cache!"
+            execute_cache_command "clear" --confirm
+        else
+            print_error "Cache clear requires explicit confirmation: claude-cache clear --confirm"
+            exit 1
+        fi
+        ;;
+    
+    "optimize"|"opt")
+        check_cache_system
+        execute_cache_command "optimize"
+        ;;
+    
+    "dashboard"|"dash")
+        print_status "Starting cache dashboard..."
+        if command -v python3 >/dev/null; then
+            cd "$CACHE_DIR" && python3 dashboard.py &
+            DASH_PID=$!
+            print_success "Dashboard started at http://localhost:8091 (PID: $DASH_PID)"
+            print_status "Press Ctrl+C to stop dashboard"
+            wait $DASH_PID
+        else
+            print_error "Python3 not found. Cannot start dashboard."
+            exit 1
+        fi
+        ;;
+    
+    "monitor"|"mon")
+        print_status "Starting cache monitor (Ctrl+C to stop)..."
+        while true; do
+            clear
+            echo "=== Claude Cache Monitor ==="
+            echo "$(date)"
+            echo ""
+            execute_cache_command "stats"
+            echo ""
+            echo "Press Ctrl+C to stop monitoring"
+            sleep 5
+        done
+        ;;
+    
+    "health"|"h")
+        print_status "Checking cache system health..."
+        
+        # Check cache directory
+        if [[ -d "$CACHE_DIR" ]]; then
+            print_success "Cache directory exists: $CACHE_DIR"
+        else
+            print_error "Cache directory missing: $CACHE_DIR"
+            exit 1
+        fi
+        
+        # Check MCP tool
+        if [[ -f "$MCP_TOOL" ]]; then
+            print_success "MCP tool available: $MCP_TOOL"
+        else
+            print_error "MCP tool missing: $MCP_TOOL"
+            exit 1
+        fi
+        
+        # Check cache functionality
+        if python3 "$MCP_TOOL" stats >/dev/null 2>&1; then
+            print_success "Cache system responding"
+        else
+            print_error "Cache system not responding"
+            exit 1
+        fi
+        
+        # Show basic stats
+        execute_cache_command "stats"
+        ;;
+    
+    "help"|"--help"|"-h"|"")
+        show_help
+        ;;
+    
+    *)
+        print_error "Unknown command: $1"
+        echo ""
+        show_help
+        exit 1
+        ;;
+esac

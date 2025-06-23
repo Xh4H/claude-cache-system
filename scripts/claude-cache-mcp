@@ -1,0 +1,110 @@
+#!/usr/bin/env python3
+"""
+Claude Cache MCP Server
+Starts the MCP server for Claude Cache integration
+"""
+
+import os
+import sys
+import json
+import asyncio
+from pathlib import Path
+
+# Add cache directory to path
+cache_dir = Path.home() / ".claude" / "cache"
+sys.path.insert(0, str(cache_dir))
+
+try:
+    from mcp_cache_tool import mcp_cache_tool
+except ImportError:
+    print("Error: Could not import mcp_cache_tool. Make sure the cache system is installed.")
+    sys.exit(1)
+
+class MCPServer:
+    """Simple MCP server for Claude Cache"""
+    
+    def __init__(self):
+        self.tool = mcp_cache_tool
+        
+    async def handle_tool_call(self, tool_name: str, parameters: dict):
+        """Handle MCP tool calls"""
+        try:
+            if tool_name == "cache_file":
+                return await self.tool.cache_file(
+                    parameters["file_path"], 
+                    parameters.get("force", False)
+                )
+            elif tool_name == "cache_pattern":
+                return await self.tool.cache_pattern(
+                    parameters["pattern"],
+                    parameters.get("directory", ".")
+                )
+            elif tool_name == "get_cache_stats":
+                return await self.tool.get_cache_stats()
+            elif tool_name == "warm_cache":
+                return await self.tool.warm_cache(
+                    parameters["patterns"],
+                    parameters.get("directory", ".")
+                )
+            elif tool_name == "clear_cache":
+                return await self.tool.clear_cache(
+                    parameters.get("confirm", False)
+                )
+            elif tool_name == "get_cached_file":
+                return await self.tool.get_cached_file(parameters["file_path"])
+            elif tool_name == "check_file_cached":
+                return await self.tool.check_file_cached(parameters["file_path"])
+            elif tool_name == "optimize_cache":
+                return await self.tool.optimize_cache()
+            else:
+                return {
+                    "success": False,
+                    "error": f"Unknown tool: {tool_name}"
+                }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"Tool execution failed: {str(e)}",
+                "tool": tool_name
+            }
+
+async def main():
+    """Main server function"""
+    server = MCPServer()
+    
+    # Simple test mode
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        print("Testing Claude Cache MCP Server...")
+        
+        # Test cache stats
+        result = await server.handle_tool_call("get_cache_stats", {})
+        print("Cache Stats Test:")
+        print(json.dumps(result, indent=2))
+        
+        # Test pattern caching
+        result = await server.handle_tool_call("cache_pattern", {
+            "pattern": "*.py",
+            "directory": str(Path.home() / ".claude" / "cache")
+        })
+        print("\nPattern Cache Test:")
+        print(json.dumps(result, indent=2))
+        
+        return
+    
+    print("Claude Cache MCP Server starting...")
+    print("Available tools:", [
+        "cache_file", "cache_pattern", "get_cache_stats", 
+        "warm_cache", "clear_cache", "get_cached_file",
+        "check_file_cached", "optimize_cache"
+    ])
+    
+    # In a real MCP server, this would handle the MCP protocol
+    # For now, just keep running
+    try:
+        while True:
+            await asyncio.sleep(1)
+    except KeyboardInterrupt:
+        print("\nShutting down Claude Cache MCP Server...")
+
+if __name__ == "__main__":
+    asyncio.run(main())

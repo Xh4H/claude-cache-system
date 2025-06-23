@@ -1,0 +1,23 @@
+#!/bin/bash
+# Ultra-quick reference for most used commands
+
+echo -e "\033[1;34m═══ Claude Quick Commands ═══\033[0m"
+echo
+echo -e "\033[1;33mSession:\033[0m"
+echo "  qsave <topic>    - Save current work"
+echo "  cresume          - Resume last session"
+echo "  qlist            - List recent sessions"
+echo
+echo -e "\033[1;33mHealth:\033[0m"
+echo "  claude-health    - System check"
+echo "  claude-status    - Quick status"
+echo
+echo -e "\033[1;33mSearch:\033[0m"
+echo "  ks <term>        - Knowledge search"
+echo "  memento_search   - Graph search"
+echo
+echo -e "\033[1;33mHelp:\033[0m"
+echo "  cref or ?        - Full reference menu"
+echo "  claude-help      - Claude README"
+echo
+echo -e "\033[0;32mTip: Use '?' for interactive menu\033[0m"

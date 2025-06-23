@@ -1,0 +1,3 @@
+#!/bin/bash
+# Short alias for claude-prompt-enhance
+exec "$HOME/.claude/scripts/claude-prompt-enhance" "$@"

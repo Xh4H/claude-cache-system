@@ -1,0 +1,95 @@
+#!/bin/bash
+# Claude prompt enhancement command wrapper
+
+SCRIPT_DIR="$HOME/.claude/scripts"
+ENHANCER="$SCRIPT_DIR/prompt-enhance/prompt-enhancer.py"
+
+# Ensure script is executable
+chmod +x "$ENHANCER" 2>/dev/null
+
+# Shorter alias handling
+if [ "$0" = "cpe" ] || [ "$(basename "$0")" = "cpe" ]; then
+    # Called as 'cpe'
+    case "$1" in
+        on|off)
+            python3 "$ENHANCER" toggle "$1"
+            ;;
+        smart|aggressive|minimal)
+            python3 "$ENHANCER" level "$1"
+            ;;
+        "")
+            python3 "$ENHANCER" status
+            ;;
+        *)
+            echo "Usage: cpe [on|off|smart|aggressive|minimal]"
+            ;;
+    esac
+else
+    # Full command handling
+    case "$1" in
+        toggle)
+            shift
+            python3 "$ENHANCER" toggle "$@"
+            ;;
+        level)
+            shift
+            python3 "$ENHANCER" level "$@"
+            ;;
+        status)
+            python3 "$ENHANCER" status
+            ;;
+        history)
+            python3 "$ENHANCER" history
+            ;;
+        enhance)
+            shift
+            python3 "$ENHANCER" enhance "$@"
+            ;;
+        test)
+            # Test enhancement on sample prompts
+            echo "Testing prompt enhancement..."
+            echo
+            test_prompts=(
+                "fix this"
+                "make it better"
+                "create script"
+                "add feature"
+                "implement login"
+                "clean code"
+            )
+            
+            for prompt in "${test_prompts[@]}"; do
+                echo "Original: $prompt"
+                enhanced=$(python3 "$ENHANCER" enhance "$prompt")
+                echo "Enhanced: $enhanced"
+                echo
+            done
+            ;;
+        *)
+            cat << EOF
+Claude Prompt Enhancement Mode
+
+Usage:
+  claude-prompt-enhance [command] [args]
+  cpe [on|off|level]  # Short version
+
+Commands:
+  toggle [on|off]     Toggle enhancement mode
+  level [mode]        Set level: smart, aggressive, minimal
+  status              Show current settings
+  history             Show enhancement history
+  enhance "prompt"    Test enhancement on a prompt
+  test                Run enhancement tests
+
+Examples:
+  cpe on                           # Enable enhancement
+  cpe smart                        # Set smart level
+  claude-prompt-enhance status     # Check status
+  claude-prompt-enhance test       # See examples
+
+Current Status:
+$(python3 "$ENHANCER" status)
+EOF
+            ;;
+    esac
+fi

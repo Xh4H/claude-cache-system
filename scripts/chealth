@@ -1,0 +1,3 @@
+#!/bin/bash
+# 🔍 Claude Cache Health - Instant health check
+python ~/.claude/cache/claude_cache_daemon.py health

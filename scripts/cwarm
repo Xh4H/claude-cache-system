@@ -1,0 +1,3 @@
+#!/bin/bash
+# 🚀 Claude Cache Warm - Ultra-fast file caching
+python ~/.claude/cache/claude_cache_daemon.py warm "$@"
