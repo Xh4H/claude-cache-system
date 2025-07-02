@@ -1,0 +1,114 @@
+{
+  "fortris": {
+    "version": "3.0",
+    "name": "Fortris Security Cache System",
+    "description": "Advanced security analysis for enterprise codebases",
+    "enterprise_ready": true
+  },
+  "cache_settings": {
+    "cache_dir": "~/.fortris/cache",
+    "logs_dir": "~/.fortris/logs",
+    "config_dir": "~/.fortris/config",
+    "cache_size_limit_gb": 10.0,
+    "partition_size_mb": 500,
+    "max_file_size_mb": 50,
+    "compression_threshold_kb": 100,
+    "daemon_port": 19849
+  },
+  "security_analysis": {
+    "enabled": true,
+    "real_time_scanning": true,
+    "vulnerability_patterns": "fortris_patterns.json",
+    "security_score_threshold": 70,
+    "scan_interval_hours": 1,
+    "report_format": "json"
+  },
+  "git_integration": {
+    "enabled": true,
+    "auto_update": true,
+    "update_interval_minutes": 5,
+    "track_commits": true,
+    "branch_specific_analysis": true
+  },
+  "performance": {
+    "parallel_workers": 8,
+    "memory_cache_size": 1000,
+    "ttl_cache_size": 5000,
+    "ttl_seconds": 3600,
+    "io_threads": 8,
+    "cpu_workers": 4
+  },
+  "allowed_directories": [
+    "~/",
+    "/tmp",
+    "/opt/projects",
+    "/workspace"
+  ],
+  "allowed_extensions": [
+    ".py", ".js", ".ts", ".java", ".cs", ".go", ".php", ".rb",
+    ".c", ".cpp", ".h", ".hpp", ".rs", ".swift", ".kt",
+    ".yml", ".yaml", ".json", ".xml", ".conf", ".ini",
+    ".md", ".txt", ".sql", ".sh", ".bash", ".ps1"
+  ],
+  "exclude_patterns": [
+    "*.log", "*.tmp", ".git/*", "node_modules/*", "__pycache__/*",
+    "*.pyc", "*.class", "*.jar", "*.war", "*.ear",
+    ".venv/*", "venv/*", ".env/*", "env/*",
+    "build/*", "dist/*", "target/*", "bin/*"
+  ],
+  "security_patterns": {
+    "secrets": {
+      "enabled": true,
+      "patterns": [
+        "password\\s*=\\s*[\"'][^\"']+[\"']",
+        "api[_-]?key\\s*=\\s*[\"'][^\"']+[\"']",
+        "secret\\s*=\\s*[\"'][^\"']+[\"']",
+        "token\\s*=\\s*[\"'][^\"']+[\"']"
+      ]
+    },
+    "injection": {
+      "enabled": true,
+      "patterns": [
+        "execute\\s*\\(\\s*[\"'].*?\\%s.*?[\"'].*?\\%.*?\\)",
+        "os\\.system\\s*\\([^)]*\\+[^)]*\\)",
+        "eval\\s*\\([^)]*(?:request|input|argv)"
+      ]
+    },
+    "crypto": {
+      "enabled": true,
+      "patterns": [
+        "(?:MD5|SHA1)\\s*\\(",
+        "random\\.random\\s*\\(\\)"
+      ]
+    }
+  },
+  "enterprise_features": {
+    "compliance_logging": true,
+    "audit_trail": true,
+    "role_based_access": false,
+    "sso_integration": false,
+    "custom_patterns": true,
+    "advanced_reporting": true,
+    "api_endpoints": true
+  },
+  "monitoring": {
+    "performance_metrics": true,
+    "health_checks": true,
+    "alerting": false,
+    "log_level": "INFO",
+    "log_rotation": true,
+    "max_log_size_mb": 100
+  },
+  "branding": {
+    "company": "Fortris",
+    "product": "Fortris Security Cache System",
+    "logo": "🔒",
+    "colors": {
+      "primary": "#1f2937",
+      "secondary": "#3b82f6",
+      "success": "#10b981",
+      "warning": "#f59e0b",
+      "error": "#ef4444"
+    }
+  }
+}

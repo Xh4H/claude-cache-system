@@ -1,0 +1,238 @@
+#!/bin/bash
+# Fortris Security Cache - Main command interface
+
+DAEMON_HOST="127.0.0.1"
+DAEMON_PORT="19848"
+CACHE_DIR="$HOME/.claude/cache"
+SCRIPT_DIR="$(dirname "$0")"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+print_help() {
+    cat << EOF
+🔒 Fortris Security Cache - Enterprise Vulnerability Analysis System
+
+USAGE:
+    fortris <command> [options]
+
+COMMANDS:
+    start               Start Fortris security daemon
+    stop                Stop Fortris security daemon
+    status              Check daemon status
+    
+    warm <patterns>     Warm cache with security analysis
+    scan                Run full vulnerability scan
+    report              Generate security report
+    
+    git-init <path>     Initialize git integration
+    git-update          Update cache from git changes
+    pr-scan <pr-id>     Scan pull request changes
+    
+    find-vulns [type]   Find vulnerabilities by type
+    fix-suggestions     Get fix suggestions for vulnerabilities
+    
+    metrics             Show performance metrics
+    health              Health check
+    info                Show Fortris system information
+    
+EXAMPLES:
+    fortris start                          # Start Fortris daemon
+    fortris warm "src/**/*.py" "**/*.js"  # Cache and analyze files
+    fortris scan                          # Full vulnerability scan
+    fortris report > security-report.json # Export security report
+    fortris git-init /path/to/repo       # Enable git integration
+    fortris pr-scan 123                  # Scan PR #123 changes
+
+SECURITY PATTERNS DETECTED:
+    - Hardcoded passwords/secrets
+    - SQL injection vulnerabilities
+    - Command injection risks
+    - Path traversal attacks
+    - Weak cryptography
+    - Unsafe deserialization
+    - CORS misconfigurations
+
+FORTRIS ENTERPRISE FEATURES:
+    - Real-time vulnerability detection
+    - Git-based incremental updates
+    - Intelligent cache partitioning
+    - Multi-level security scoring
+    - Comprehensive reporting
+
+EOF
+}
+
+# Check if Fortris daemon is running
+is_daemon_running() {
+    pgrep -f "fortris_security_daemon.py" > /dev/null
+}
+
+# Start Fortris daemon
+start_daemon() {
+    if is_daemon_running; then
+        echo -e "${YELLOW}Fortris security daemon is already running${NC}"
+        return 0
+    fi
+    
+    echo -e "${BLUE}🔒 Starting Fortris Security Daemon...${NC}"
+    cd "$CACHE_DIR"
+    python3 "$CACHE_DIR/fortris_security_daemon.py" --daemon &
+    
+    sleep 2
+    
+    if is_daemon_running; then
+        echo -e "${GREEN}✓ Fortris security daemon started successfully${NC}"
+        echo -e "${GREEN}✓ Enterprise security analysis ready${NC}"
+        return 0
+    else
+        echo -e "${RED}✗ Failed to start Fortris daemon${NC}"
+        return 1
+    fi
+}
+
+# Stop Fortris daemon
+stop_daemon() {
+    if ! is_daemon_running; then
+        echo -e "${YELLOW}Fortris security daemon is not running${NC}"
+        return 0
+    fi
+    
+    echo -e "${BLUE}Stopping Fortris security daemon...${NC}"
+    pkill -f "fortris_security_daemon.py"
+    
+    sleep 1
+    
+    if ! is_daemon_running; then
+        echo -e "${GREEN}✓ Fortris security daemon stopped${NC}"
+        return 0
+    else
+        echo -e "${RED}✗ Failed to stop Fortris daemon${NC}"
+        return 1
+    fi
+}
+
+# Check Fortris daemon status
+check_status() {
+    if is_daemon_running; then
+        echo -e "${GREEN}✓ Fortris security daemon is running${NC}"
+        
+        # Get health status
+        health_result=$(python3 "$CACHE_DIR/fortris_security_daemon.py" health 2>/dev/null)
+        if [ $? -eq 0 ]; then
+            echo "$health_result" | python3 -m json.tool
+        fi
+    else
+        echo -e "${RED}✗ Fortris security daemon is not running${NC}"
+        echo -e "${YELLOW}Run 'fortris start' to begin security analysis${NC}"
+    fi
+}
+
+# Main command processing
+case "$1" in
+    "start")
+        start_daemon
+        ;;
+        
+    "stop")
+        stop_daemon
+        ;;
+        
+    "status")
+        check_status
+        ;;
+        
+    "warm"|"w")
+        shift
+        if [ $# -eq 0 ]; then
+            echo -e "${RED}Error: No patterns specified${NC}"
+            echo "Usage: fortris warm <pattern1> [pattern2] ..."
+            exit 1
+        fi
+        
+        echo -e "${BLUE}🔍 Warming cache with Fortris security analysis...${NC}"
+        python3 "$CACHE_DIR/fortris_security_daemon.py" warm "$@"
+        ;;
+        
+    "scan"|"s")
+        echo -e "${BLUE}🔍 Running Fortris vulnerability scan...${NC}"
+        python3 "$CACHE_DIR/fortris_security_daemon.py" scan
+        ;;
+        
+    "report"|"r")
+        echo -e "${BLUE}📊 Generating Fortris security report...${NC}"
+        python3 "$CACHE_DIR/fortris_security_daemon.py" security-report
+        ;;
+        
+    "git-init")
+        if [ -z "$2" ]; then
+            echo -e "${RED}Error: Repository path required${NC}"
+            echo "Usage: fortris git-init <repo-path>"
+            exit 1
+        fi
+        
+        echo -e "${BLUE}🔗 Initializing Fortris git integration...${NC}"
+        python3 "$CACHE_DIR/fortris_security_daemon.py" set-repo "$2"
+        ;;
+        
+    "git-update")
+        echo -e "${BLUE}🔄 Updating Fortris cache from git changes...${NC}"
+        python3 "$CACHE_DIR/fortris_security_daemon.py" git-update
+        ;;
+        
+    "pr-scan")
+        if [ -z "$2" ]; then
+            echo -e "${RED}Error: PR ID required${NC}"
+            echo "Usage: fortris pr-scan <pr-id>"
+            exit 1
+        fi
+        
+        echo -e "${BLUE}🔍 Fortris scanning pull request #$2...${NC}"
+        # This would need integration with GitHub/GitLab API
+        echo "Fortris PR scanning requires additional configuration"
+        echo "Contact your administrator for GitHub/GitLab integration setup"
+        ;;
+        
+    "find-vulns")
+        echo -e "${BLUE}🎯 Fortris vulnerability search...${NC}"
+        python3 "$CACHE_DIR/fortris_security_daemon.py" vulnerabilities
+        ;;
+        
+    "fix-suggestions")
+        echo -e "${BLUE}💡 Fortris fix suggestions...${NC}"
+        echo "This feature is coming in a future Fortris update"
+        ;;
+        
+    "metrics"|"m")
+        echo -e "${BLUE}📈 Fortris performance metrics:${NC}"
+        python3 "$CACHE_DIR/fortris_security_daemon.py" stats
+        ;;
+        
+    "health"|"h")
+        echo -e "${BLUE}🏥 Fortris health check:${NC}"
+        python3 "$CACHE_DIR/fortris_security_daemon.py" health
+        ;;
+        
+    "info"|"i")
+        echo -e "${BLUE}ℹ️  Fortris system information:${NC}"
+        python3 "$CACHE_DIR/fortris_security_daemon.py" info
+        ;;
+        
+    "help"|"--help"|"-h"|"")
+        print_help
+        ;;
+        
+    *)
+        echo -e "${RED}Unknown Fortris command: $1${NC}"
+        echo ""
+        echo -e "${BLUE}🔒 Fortris Security Cache System v3.0${NC}"
+        echo -e "${BLUE}Advanced security analysis for enterprise codebases${NC}"
+        echo ""
+        print_help
+        exit 1
+        ;;
+esac
