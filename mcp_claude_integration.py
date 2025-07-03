@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-MCP Server Integration for Fortris Security Cache
-Provides Claude Code compatibility while maintaining Fortris branding
+MCP Server Integration for claude Security Cache
+Provides Claude Code compatibility while maintaining claude branding
 """
 
 import json
@@ -11,16 +11,16 @@ from typing import Any, Dict, List, Optional
 from pathlib import Path
 import logging
 
-# Import Fortris cache system
-from fortris_security_cache import FortrisSecurityCache
+# Import claude cache system
+from claude_security_cache import claudeSecurityCache
 
-logger = logging.getLogger("FortrisMCP")
+logger = logging.getLogger("claudeMCP")
 
-class FortrisMCPServer:
-    """MCP Server for Fortris Security Cache - Claude Code Integration"""
+class claudeMCPServer:
+    """MCP Server for claude Security Cache - Claude Code Integration"""
     
     def __init__(self):
-        self.cache = FortrisSecurityCache()
+        self.cache = claudeSecurityCache()
         self.tools = {
             "cache_file": self._cache_file_tool,
             "warm_cache": self._warm_cache_tool,
@@ -30,7 +30,7 @@ class FortrisMCPServer:
         }
     
     async def _cache_file_tool(self, file_path: str, force: bool = False) -> Dict[str, Any]:
-        """Cache a file with Fortris security analysis"""
+        """Cache a file with claude security analysis"""
         try:
             entry = self.cache.cache_file_enhanced(file_path, force)
             if entry:
@@ -40,7 +40,7 @@ class FortrisMCPServer:
                     "size": entry.size,
                     "security_score": entry.security_score,
                     "vulnerabilities": len(entry.vulnerabilities),
-                    "fortris_analyzed": True,
+                    "claude_analyzed": True,
                     "cached_at": entry.cached_time
                 }
             else:
@@ -60,7 +60,7 @@ class FortrisMCPServer:
         """Warm cache with security analysis"""
         try:
             result = self.cache.warm_cache_parallel(patterns)
-            result["fortris_analysis"] = True
+            result["claude_analysis"] = True
             return result
         except Exception as e:
             return {
@@ -78,7 +78,7 @@ class FortrisMCPServer:
                     "file": file_path,
                     "content": content.decode('utf-8', errors='ignore'),
                     "size": len(content),
-                    "fortris_cached": True
+                    "claude_cached": True
                 }
             else:
                 return {
@@ -94,10 +94,10 @@ class FortrisMCPServer:
             }
     
     async def _security_report_tool(self) -> Dict[str, Any]:
-        """Generate Fortris security report"""
+        """Generate claude security report"""
         try:
             report = self.cache.get_security_report()
-            report["fortris_generated"] = True
+            report["claude_generated"] = True
             return report
         except Exception as e:
             return {
@@ -106,12 +106,12 @@ class FortrisMCPServer:
             }
     
     async def _health_check_tool(self) -> Dict[str, Any]:
-        """Check Fortris cache health"""
+        """Check claude cache health"""
         try:
             metrics = self.cache.get_performance_metrics()
             return {
                 "status": "healthy",
-                "fortris_version": "3.0",
+                "claude_version": "3.0",
                 "cache_metrics": metrics,
                 "enterprise_ready": True
             }
@@ -130,8 +130,8 @@ class FortrisMCPServer:
             return {
                 "tools": [
                     {
-                        "name": "fortris_cache_file",
-                        "description": "Cache a file with Fortris security analysis",
+                        "name": "claude_cache_file",
+                        "description": "Cache a file with claude security analysis",
                         "inputSchema": {
                             "type": "object",
                             "properties": {
@@ -142,7 +142,7 @@ class FortrisMCPServer:
                         }
                     },
                     {
-                        "name": "fortris_warm_cache",
+                        "name": "claude_warm_cache",
                         "description": "Warm cache with security analysis for multiple files",
                         "inputSchema": {
                             "type": "object",
@@ -157,7 +157,7 @@ class FortrisMCPServer:
                         }
                     },
                     {
-                        "name": "fortris_get_content",
+                        "name": "claude_get_content",
                         "description": "Get cached file content",
                         "inputSchema": {
                             "type": "object",
@@ -168,7 +168,7 @@ class FortrisMCPServer:
                         }
                     },
                     {
-                        "name": "fortris_security_report",
+                        "name": "claude_security_report",
                         "description": "Generate comprehensive security report",
                         "inputSchema": {
                             "type": "object",
@@ -176,8 +176,8 @@ class FortrisMCPServer:
                         }
                     },
                     {
-                        "name": "fortris_health_check",
-                        "description": "Check Fortris cache system health",
+                        "name": "claude_health_check",
+                        "description": "Check claude cache system health",
                         "inputSchema": {
                             "type": "object",
                             "properties": {}
@@ -190,18 +190,18 @@ class FortrisMCPServer:
             tool_name = params.get("name")
             arguments = params.get("arguments", {})
             
-            if tool_name == "fortris_cache_file":
+            if tool_name == "claude_cache_file":
                 result = await self._cache_file_tool(**arguments)
-            elif tool_name == "fortris_warm_cache":
+            elif tool_name == "claude_warm_cache":
                 result = await self._warm_cache_tool(**arguments)
-            elif tool_name == "fortris_get_content":
+            elif tool_name == "claude_get_content":
                 result = await self._get_cached_content_tool(**arguments)
-            elif tool_name == "fortris_security_report":
+            elif tool_name == "claude_security_report":
                 result = await self._security_report_tool()
-            elif tool_name == "fortris_health_check":
+            elif tool_name == "claude_health_check":
                 result = await self._health_check_tool()
             else:
-                result = {"error": f"Unknown Fortris tool: {tool_name}"}
+                result = {"error": f"Unknown claude tool: {tool_name}"}
             
             return {
                 "content": [
@@ -217,7 +217,7 @@ class FortrisMCPServer:
 
     async def run(self):
         """Run the MCP server"""
-        logger.info("Starting Fortris MCP Server for Claude Code integration")
+        logger.info("Starting claude MCP Server for Claude Code integration")
         
         # Read messages from stdin and write responses to stdout
         # This follows the MCP protocol for Claude Code integration
@@ -241,20 +241,20 @@ class FortrisMCPServer:
                 print(json.dumps(error_response), flush=True)
 
 def main():
-    """Main entry point for Fortris MCP Server"""
+    """Main entry point for claude MCP Server"""
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - FortrisMCP - %(levelname)s - %(message)s'
+        format='%(asctime)s - claudeMCP - %(levelname)s - %(message)s'
     )
     
-    server = FortrisMCPServer()
+    server = claudeMCPServer()
     
     try:
         asyncio.run(server.run())
     except KeyboardInterrupt:
-        logger.info("Fortris MCP Server stopped")
+        logger.info("claude MCP Server stopped")
     except Exception as e:
-        logger.error(f"Fortris MCP Server error: {e}")
+        logger.error(f"claude MCP Server error: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

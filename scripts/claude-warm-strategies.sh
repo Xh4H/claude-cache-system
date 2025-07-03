@@ -1,5 +1,5 @@
 #!/bin/bash
-# Fortris Security-focused cache warming strategies
+# claude Security-focused cache warming strategies
 
 CACHE_DIR="$HOME/.claude/cache"
 SCRIPT_DIR="$(dirname "$0")"
@@ -10,7 +10,7 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo "🔒 Fortris Security-Focused Cache Warming Strategies"
+echo "🔒 claude Security-Focused Cache Warming Strategies"
 echo "=================================================="
 
 # Strategy 1: Warm high-risk file types first
@@ -19,23 +19,23 @@ warm_high_risk() {
     echo "Caching files most likely to contain vulnerabilities..."
     
     # Authentication and config files
-    fortris warm \
+    claude warm \
         "**/config*.py" "**/config*.js" "**/config*.yml" \
         "**/settings*.py" "**/settings*.js" \
         "**/.env*" "**/secrets*" "**/credentials*"
     
     # Database and SQL files
-    fortris warm \
+    claude warm \
         "**/models*.py" "**/database*.py" "**/db*.py" \
         "**/*.sql" "**/queries*.py" "**/queries*.js"
     
     # API and network code
-    fortris warm \
+    claude warm \
         "**/api*.py" "**/api*.js" "**/routes*.py" "**/routes*.js" \
         "**/views*.py" "**/controllers*.py" "**/handlers*.py"
     
     # Security-related files
-    fortris warm \
+    claude warm \
         "**/auth*.py" "**/auth*.js" "**/security*.py" "**/security*.js" \
         "**/crypto*.py" "**/crypto*.js" "**/hash*.py" "**/hash*.js"
 }
@@ -56,32 +56,32 @@ warm_by_stack() {
     
     case $choice in
         1)
-            echo "Warming Python stack with Fortris..."
-            fortris warm "**/*.py" "**/requirements*.txt" "**/Pipfile*" "**/*.yml"
+            echo "Warming Python stack with claude..."
+            claude warm "**/*.py" "**/requirements*.txt" "**/Pipfile*" "**/*.yml"
             ;;
         2)
-            echo "Warming JavaScript stack with Fortris..."
-            fortris warm "**/*.js" "**/*.ts" "**/*.jsx" "**/*.tsx" "**/package*.json"
+            echo "Warming JavaScript stack with claude..."
+            claude warm "**/*.js" "**/*.ts" "**/*.jsx" "**/*.tsx" "**/package*.json"
             ;;
         3)
-            echo "Warming Java stack with Fortris..."
-            fortris warm "**/*.java" "**/pom.xml" "**/build.gradle" "**/*.properties"
+            echo "Warming Java stack with claude..."
+            claude warm "**/*.java" "**/pom.xml" "**/build.gradle" "**/*.properties"
             ;;
         4)
-            echo "Warming PHP stack with Fortris..."
-            fortris warm "**/*.php" "**/composer.json" "**/.htaccess"
+            echo "Warming PHP stack with claude..."
+            claude warm "**/*.php" "**/composer.json" "**/.htaccess"
             ;;
         5)
-            echo "Warming Ruby stack with Fortris..."
-            fortris warm "**/*.rb" "**/Gemfile*" "**/*.erb"
+            echo "Warming Ruby stack with claude..."
+            claude warm "**/*.rb" "**/Gemfile*" "**/*.erb"
             ;;
         6)
-            echo "Warming Go stack with Fortris..."
-            fortris warm "**/*.go" "**/go.mod" "**/go.sum"
+            echo "Warming Go stack with claude..."
+            claude warm "**/*.go" "**/go.mod" "**/go.sum"
             ;;
         7)
-            echo "Warming all stacks with Fortris..."
-            fortris warm "**/*.py" "**/*.js" "**/*.java" "**/*.php" "**/*.rb" "**/*.go"
+            echo "Warming all stacks with claude..."
+            claude warm "**/*.py" "**/*.js" "**/*.java" "**/*.php" "**/*.rb" "**/*.go"
             ;;
     esac
 }
@@ -93,20 +93,20 @@ warm_by_structure() {
     
     # Check for common project types
     if [ -f "package.json" ]; then
-        echo "Detected Node.js project - warming with Fortris"
-        fortris warm "src/**/*" "lib/**/*" "api/**/*" "config/**/*"
+        echo "Detected Node.js project - warming with claude"
+        claude warm "src/**/*" "lib/**/*" "api/**/*" "config/**/*"
     elif [ -f "requirements.txt" ] || [ -f "setup.py" ]; then
-        echo "Detected Python project - warming with Fortris"
-        fortris warm "**/*.py" "tests/**/*" "config/**/*"
+        echo "Detected Python project - warming with claude"
+        claude warm "**/*.py" "tests/**/*" "config/**/*"
     elif [ -f "pom.xml" ] || [ -f "build.gradle" ]; then
-        echo "Detected Java project - warming with Fortris"
-        fortris warm "src/**/*.java" "src/**/*.xml" "src/**/*.properties"
+        echo "Detected Java project - warming with claude"
+        claude warm "src/**/*.java" "src/**/*.xml" "src/**/*.properties"
     elif [ -f "composer.json" ]; then
-        echo "Detected PHP project - warming with Fortris"
-        fortris warm "src/**/*.php" "app/**/*.php" "config/**/*.php"
+        echo "Detected PHP project - warming with claude"
+        claude warm "src/**/*.php" "app/**/*.php" "config/**/*.php"
     else
-        echo "Using generic structure with Fortris"
-        fortris warm "src/**/*" "lib/**/*" "app/**/*" "config/**/*"
+        echo "Using generic structure with claude"
+        claude warm "src/**/*" "lib/**/*" "app/**/*" "config/**/*"
     fi
 }
 
@@ -118,7 +118,7 @@ warm_recent() {
     # Find recently modified files
     find . -type f \( -name "*.py" -o -name "*.js" -o -name "*.java" -o -name "*.php" \) \
         -mtime -7 -print0 | while IFS= read -r -d '' file; do
-        fortris cache "$file"
+        claude cache "$file"
     done
 }
 
@@ -138,7 +138,7 @@ warm_git_hotspots() {
         sort | uniq -c | sort -rn | head -50 | \
         awk '{print $2}' | while read file; do
         if [ -f "$file" ]; then
-            fortris cache "$file"
+            claude cache "$file"
         fi
     done
 }
@@ -148,7 +148,7 @@ warm_dependencies() {
     echo -e "\n${BLUE}Strategy 6: External Dependencies${NC}"
     echo "Caching dependency and configuration files..."
     
-    fortris warm \
+    claude warm \
         "**/package*.json" "**/yarn.lock" "**/package-lock.json" \
         "**/requirements*.txt" "**/Pipfile*" "**/poetry.lock" \
         "**/pom.xml" "**/build.gradle" "**/gradle.properties" \
@@ -166,7 +166,7 @@ warm_custom_patterns() {
     
     if [ -n "$patterns" ]; then
         IFS=',' read -ra PATTERN_ARRAY <<< "$patterns"
-        fortris warm "${PATTERN_ARRAY[@]}"
+        claude warm "${PATTERN_ARRAY[@]}"
     fi
 }
 
@@ -204,8 +204,8 @@ while true; do
             warm_dependencies
             ;;
         9)
-            echo -e "\n${GREEN}Fortris cache warming complete!${NC}"
-            echo "Run 'fortris report' to see security analysis results."
+            echo -e "\n${GREEN}claude cache warming complete!${NC}"
+            echo "Run 'claude report' to see security analysis results."
             exit 0
             ;;
         *)

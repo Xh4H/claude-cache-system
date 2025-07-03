@@ -1,14 +1,14 @@
 {
-  "fortris": {
+  "claude": {
     "version": "3.0",
-    "name": "Fortris Security Cache System",
+    "name": "Claude Security Cache System",
     "description": "Advanced security analysis for enterprise codebases",
     "enterprise_ready": true
   },
   "cache_settings": {
-    "cache_dir": "~/.fortris/cache",
-    "logs_dir": "~/.fortris/logs",
-    "config_dir": "~/.fortris/config",
+    "cache_dir": "~/.claude/cache",
+    "logs_dir": "~/.claude/logs",
+    "config_dir": "~/.claude/config",
     "cache_size_limit_gb": 10.0,
     "partition_size_mb": 500,
     "max_file_size_mb": 50,
@@ -18,7 +18,7 @@
   "security_analysis": {
     "enabled": true,
     "real_time_scanning": true,
-    "vulnerability_patterns": "fortris_patterns.json",
+    "vulnerability_patterns": "claude_patterns.json",
     "security_score_threshold": 70,
     "scan_interval_hours": 1,
     "report_format": "json"
@@ -100,8 +100,8 @@
     "max_log_size_mb": 100
   },
   "branding": {
-    "company": "Fortris",
-    "product": "Fortris Security Cache System",
+    "company": "Claude",
+    "product": "Claude Security Cache System",
     "logo": "🔒",
     "colors": {
       "primary": "#1f2937",

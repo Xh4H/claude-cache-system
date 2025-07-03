@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fortris Security Cache System v3.0
+claude Security Cache System v3.0
 Advanced security analysis and caching for enterprise codebases
 """
 
@@ -38,9 +38,9 @@ import git  # GitPython for git integration
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - Fortris - %(levelname)s - %(message)s'
+    format='%(asctime)s - claude - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger("Fortris")
+logger = logging.getLogger("claude")
 
 class FileType(Enum):
     """File types for optimized handling"""
@@ -102,17 +102,17 @@ class CachePartition:
     file_count: int
     last_updated: float
 
-class FortrisSecurityAnalyzer:
-    """Advanced security pattern analyzer for Fortris"""
+class claudeSecurityAnalyzer:
+    """Advanced security pattern analyzer for claude"""
     
     def __init__(self):
         self.patterns = self._load_security_patterns()
         self._compiled_patterns = {}
         self._init_patterns()
-        logger.info("Fortris Security Analyzer initialized with {} patterns".format(len(self.patterns)))
+        logger.info("claude Security Analyzer initialized with {} patterns".format(len(self.patterns)))
     
     def _load_security_patterns(self) -> List[SecurityPattern]:
-        """Load Fortris security patterns for vulnerability detection"""
+        """Load claude security patterns for vulnerability detection"""
         patterns = [
             # Authentication & Secrets
             SecurityPattern(
@@ -193,7 +193,7 @@ class FortrisSecurityAnalyzer:
                 self._compiled_patterns[pattern.pattern] = pattern.regex
     
     def analyze_content(self, content: str, file_path: str) -> Tuple[float, List[Dict[str, Any]]]:
-        """Analyze content for security vulnerabilities using Fortris patterns"""
+        """Analyze content for security vulnerabilities using claude patterns"""
         vulnerabilities = []
         security_score = 100.0
         
@@ -212,7 +212,7 @@ class FortrisSecurityAnalyzer:
                         "pattern": pattern.pattern[:50] + "...",
                         "matches": len(matches),
                         "file": file_path,
-                        "detected_by": "Fortris Security Analyzer"
+                        "detected_by": "claude Security Analyzer"
                     }
                     vulnerabilities.append(vuln)
                     
@@ -228,14 +228,14 @@ class FortrisSecurityAnalyzer:
         
         return max(0, security_score), vulnerabilities
 
-class FortrisGitIntegration:
-    """Git integration for Fortris incremental cache updates"""
+class claudeGitIntegration:
+    """Git integration for claude incremental cache updates"""
     
     def __init__(self, repo_path: str):
         self.repo_path = Path(repo_path)
         self.repo = None
         self._init_repo()
-        logger.info(f"Fortris Git integration initialized for: {repo_path}")
+        logger.info(f"claude Git integration initialized for: {repo_path}")
     
     def _init_repo(self):
         """Initialize git repository"""
@@ -299,14 +299,14 @@ class FortrisGitIntegration:
             logger.error(f"Error getting file at commit: {e}")
             return None
 
-class FortrisSecurityCache:
-    """Fortris Security Cache System - Advanced security analysis for enterprise codebases"""
+class claudeSecurityCache:
+    """claude Security Cache System - Advanced security analysis for enterprise codebases"""
     
     def __init__(self, cache_dir: str = None, allowed_dirs: List[str] = None):
-        """Initialize Fortris security cache system"""
+        """Initialize claude security cache system"""
         self.cache_dir = Path(cache_dir or os.path.expanduser("~/.claude/cache"))
-        self.config_file = self.cache_dir / "config" / "fortris_security.json"
-        self.db_file = self.cache_dir / "files" / "fortris_index.db"
+        self.config_file = self.cache_dir / "config" / "claude_security.json"
+        self.db_file = self.cache_dir / "files" / "claude_index.db"
         
         # Security: Define allowed directories
         self.allowed_dirs = allowed_dirs or [
@@ -320,11 +320,11 @@ class FortrisSecurityCache:
         self._partition_lock = Lock()
         
         # Performance executors
-        self._io_executor = ThreadPoolExecutor(max_workers=8, thread_name_prefix="fortris-io")
+        self._io_executor = ThreadPoolExecutor(max_workers=8, thread_name_prefix="claude-io")
         self._cpu_executor = ProcessPoolExecutor(max_workers=4)
         
-        # Initialize Fortris components
-        self.security_analyzer = FortrisSecurityAnalyzer()
+        # Initialize claude components
+        self.security_analyzer = claudeSecurityAnalyzer()
         self.git_integration = None
         
         # Cache partitions for large codebases
@@ -350,10 +350,10 @@ class FortrisSecurityCache:
         # Background workers
         self._start_background_workers()
         
-        logger.info(f"Fortris Security Cache initialized at {self.cache_dir}")
+        logger.info(f"claude Security Cache initialized at {self.cache_dir}")
     
     def _load_config(self) -> Dict[str, Any]:
-        """Load Fortris configuration"""
+        """Load claude configuration"""
         default_config = {
             "cache_size_limit_gb": 10.0,
             "partition_size_mb": 500,
@@ -373,10 +373,10 @@ class FortrisSecurityCache:
                 ".yml", ".yaml", ".json", ".xml", ".conf", ".ini",
                 ".md", ".txt", ".sql", ".sh", ".bash", ".ps1"
             ],
-            "security_patterns_file": "fortris_patterns.json",
+            "security_patterns_file": "claude_patterns.json",
             "partition_strategy": "prefix",  # prefix, hash, size
             "index_strategy": "btree",  # btree, hash, rtree
-            "fortris_branding": True,
+            "claude_branding": True,
             "enterprise_features": True
         }
         
@@ -396,7 +396,7 @@ class FortrisSecurityCache:
         partition_count = self.config.get("partition_count", 4)
         
         for i in range(partition_count):
-            partition_id = f"fortris_partition_{i}"
+            partition_id = f"claude_partition_{i}"
             partition = CachePartition(
                 partition_id=partition_id,
                 path_prefix="",
@@ -412,14 +412,14 @@ class FortrisSecurityCache:
         # Simple hash-based partitioning
         path_hash = hashlib.md5(file_path.encode()).hexdigest()
         partition_index = int(path_hash[:2], 16) % len(self.partitions)
-        return f"fortris_partition_{partition_index}"
+        return f"claude_partition_{partition_index}"
     
     def _init_database(self):
-        """Initialize Fortris database schema"""
+        """Initialize claude database schema"""
         # Main index database
         with self._get_db_connection() as conn:
             conn.execute('''
-                CREATE TABLE IF NOT EXISTS fortris_cache (
+                CREATE TABLE IF NOT EXISTS claude_cache (
                     path TEXT PRIMARY KEY,
                     checksum TEXT NOT NULL,
                     size INTEGER NOT NULL,
@@ -435,32 +435,32 @@ class FortrisSecurityCache:
                     vulnerabilities TEXT,
                     metadata TEXT,
                     partition_key TEXT,
-                    analyzed_by_fortris BOOLEAN DEFAULT TRUE,
+                    analyzed_by_claude BOOLEAN DEFAULT TRUE,
                     FOREIGN KEY (partition_key) REFERENCES partitions(partition_id)
                 )
             ''')
             
             # Create indexes for performance
-            conn.execute('CREATE INDEX IF NOT EXISTS idx_fortris_path ON fortris_cache(path)')
-            conn.execute('CREATE INDEX IF NOT EXISTS idx_fortris_git_sha ON fortris_cache(git_sha)')
-            conn.execute('CREATE INDEX IF NOT EXISTS idx_fortris_security_score ON fortris_cache(security_score)')
-            conn.execute('CREATE INDEX IF NOT EXISTS idx_fortris_partition ON fortris_cache(partition_key)')
-            conn.execute('CREATE INDEX IF NOT EXISTS idx_fortris_file_type ON fortris_cache(file_type)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_claude_path ON claude_cache(path)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_claude_git_sha ON claude_cache(git_sha)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_claude_security_score ON claude_cache(security_score)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_claude_partition ON claude_cache(partition_key)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_claude_file_type ON claude_cache(file_type)')
             
             # Git tracking table
             conn.execute('''
-                CREATE TABLE IF NOT EXISTS fortris_git_commits (
+                CREATE TABLE IF NOT EXISTS claude_git_commits (
                     commit_sha TEXT PRIMARY KEY,
                     commit_time REAL NOT NULL,
                     files_changed INTEGER NOT NULL,
                     cached_time REAL NOT NULL,
-                    fortris_analysis BOOLEAN DEFAULT TRUE
+                    claude_analysis BOOLEAN DEFAULT TRUE
                 )
             ''')
             
             # Vulnerability tracking table
             conn.execute('''
-                CREATE TABLE IF NOT EXISTS fortris_vulnerabilities (
+                CREATE TABLE IF NOT EXISTS claude_vulnerabilities (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     file_path TEXT NOT NULL,
                     vulnerability_type TEXT NOT NULL,
@@ -468,14 +468,14 @@ class FortrisSecurityCache:
                     line_number INTEGER,
                     detected_time REAL NOT NULL,
                     resolved BOOLEAN DEFAULT FALSE,
-                    detected_by TEXT DEFAULT 'Fortris',
-                    FOREIGN KEY (file_path) REFERENCES fortris_cache(path)
+                    detected_by TEXT DEFAULT 'claude',
+                    FOREIGN KEY (file_path) REFERENCES claude_cache(path)
                 )
             ''')
             
             # Performance metrics table
             conn.execute('''
-                CREATE TABLE IF NOT EXISTS fortris_metrics (
+                CREATE TABLE IF NOT EXISTS claude_metrics (
                     timestamp REAL PRIMARY KEY,
                     cache_hits INTEGER,
                     cache_misses INTEGER,
@@ -497,17 +497,17 @@ class FortrisSecurityCache:
         """Initialize partition-specific database"""
         with sqlite3.connect(str(partition.db_file)) as conn:
             conn.execute('''
-                CREATE TABLE IF NOT EXISTS fortris_partition_cache (
+                CREATE TABLE IF NOT EXISTS claude_partition_cache (
                     path TEXT PRIMARY KEY,
                     content BLOB,
                     compressed BOOLEAN,
                     size INTEGER,
                     checksum TEXT,
-                    fortris_processed BOOLEAN DEFAULT TRUE,
-                    FOREIGN KEY (path) REFERENCES fortris_cache(path)
+                    claude_processed BOOLEAN DEFAULT TRUE,
+                    FOREIGN KEY (path) REFERENCES claude_cache(path)
                 )
             ''')
-            conn.execute('CREATE INDEX IF NOT EXISTS idx_fortris_path ON fortris_partition_cache(path)')
+            conn.execute('CREATE INDEX IF NOT EXISTS idx_claude_path ON claude_partition_cache(path)')
             conn.commit()
     
     @contextmanager
@@ -551,7 +551,7 @@ class FortrisSecurityCache:
                 if self.git_integration:
                     self.update_from_git()
             except Exception as e:
-                logger.error(f"Fortris incremental update error: {e}")
+                logger.error(f"claude incremental update error: {e}")
     
     def _vulnerability_scan_worker(self):
         """Background worker for periodic vulnerability scanning"""
@@ -562,7 +562,7 @@ class FortrisSecurityCache:
                 time.sleep(interval)
                 self.scan_all_vulnerabilities()
             except Exception as e:
-                logger.error(f"Fortris vulnerability scan error: {e}")
+                logger.error(f"claude vulnerability scan error: {e}")
     
     def _partition_rebalance_worker(self):
         """Background worker for partition rebalancing"""
@@ -573,15 +573,15 @@ class FortrisSecurityCache:
                 time.sleep(interval)
                 self._rebalance_partitions()
             except Exception as e:
-                logger.error(f"Fortris partition rebalance error: {e}")
+                logger.error(f"claude partition rebalance error: {e}")
     
     def set_git_repo(self, repo_path: str):
         """Set git repository for incremental updates"""
-        self.git_integration = FortrisGitIntegration(repo_path)
-        logger.info(f"Fortris git integration enabled for: {repo_path}")
+        self.git_integration = claudeGitIntegration(repo_path)
+        logger.info(f"claude git integration enabled for: {repo_path}")
     
     def cache_file_enhanced(self, file_path: str, force: bool = False) -> Optional[CacheEntry]:
-        """Enhanced file caching with Fortris security analysis"""
+        """Enhanced file caching with claude security analysis"""
         if not self._validate_path(file_path):
             return None
         
@@ -603,7 +603,7 @@ class FortrisSecurityCache:
             if content is None:
                 return None
             
-            # Fortris security analysis
+            # claude security analysis
             security_score = 100.0
             vulnerabilities = []
             
@@ -653,7 +653,7 @@ class FortrisSecurityCache:
                     "mime_type": mimetypes.guess_type(str(path))[0],
                     "encoding": "utf-8",
                     "lines": content.decode('utf-8', errors='ignore').count('\n') if not compressed else -1,
-                    "analyzed_by": "Fortris Security Cache v3.0"
+                    "analyzed_by": "claude Security Cache v3.0"
                 }
             )
             
@@ -677,7 +677,7 @@ class FortrisSecurityCache:
             return entry
             
         except Exception as e:
-            logger.error(f"Fortris error caching file {file_path}: {e}")
+            logger.error(f"claude error caching file {file_path}: {e}")
             self.stats['errors'] += 1
             return None
     
@@ -707,7 +707,7 @@ class FortrisSecurityCache:
             max_size = self.config.get("max_file_size_mb", 50) * 1024 * 1024
             
             if file_size > max_size:
-                logger.warning(f"Fortris: File too large: {path} ({file_size} bytes)")
+                logger.warning(f"claude: File too large: {path} ({file_size} bytes)")
                 return None
             
             # Use memory mapping for large files
@@ -719,15 +719,15 @@ class FortrisSecurityCache:
                 return path.read_bytes()
                 
         except Exception as e:
-            logger.error(f"Fortris error reading file {path}: {e}")
+            logger.error(f"claude error reading file {path}: {e}")
             return None
     
     def _store_in_partition(self, entry: CacheEntry, content: bytes, partition_id: str):
         """Store content in partition database"""
         with self._get_db_connection(partition_id) as conn:
             conn.execute('''
-                INSERT OR REPLACE INTO fortris_partition_cache 
-                (path, content, compressed, size, checksum, fortris_processed)
+                INSERT OR REPLACE INTO claude_partition_cache 
+                (path, content, compressed, size, checksum, claude_processed)
                 VALUES (?, ?, ?, ?, ?, ?)
             ''', (entry.path, content, entry.compressed, entry.size, entry.checksum, True))
             conn.commit()
@@ -736,10 +736,10 @@ class FortrisSecurityCache:
         """Update main index with cache entry"""
         with self._get_db_connection() as conn:
             conn.execute('''
-                INSERT OR REPLACE INTO fortris_cache 
+                INSERT OR REPLACE INTO claude_cache 
                 (path, checksum, size, modified_time, cached_time, compressed,
                  access_count, last_accessed, content_path, file_type, git_sha,
-                 security_score, vulnerabilities, metadata, partition_key, analyzed_by_fortris)
+                 security_score, vulnerabilities, metadata, partition_key, analyzed_by_claude)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 entry.path, entry.checksum, entry.size, entry.modified_time,
@@ -756,19 +756,19 @@ class FortrisSecurityCache:
         with self._get_db_connection() as conn:
             for vuln in vulnerabilities:
                 conn.execute('''
-                    INSERT INTO fortris_vulnerabilities 
+                    INSERT INTO claude_vulnerabilities 
                     (file_path, vulnerability_type, severity, line_number, detected_time, detected_by)
                     VALUES (?, ?, ?, ?, ?, ?)
                 ''', (
                     file_path, vuln['type'], vuln['severity'], 
-                    vuln.get('line_number', -1), time.time(), 'Fortris Security Analyzer'
+                    vuln.get('line_number', -1), time.time(), 'claude Security Analyzer'
                 ))
             conn.commit()
     
     def update_from_git(self, base_ref: str = "HEAD~1", target_ref: str = "HEAD"):
-        """Update Fortris cache based on git changes"""
+        """Update claude cache based on git changes"""
         if not self.git_integration:
-            logger.warning("Fortris git integration not configured")
+            logger.warning("claude git integration not configured")
             return
         
         changes = self.git_integration.get_changed_files(base_ref, target_ref)
@@ -779,10 +779,10 @@ class FortrisSecurityCache:
             else:
                 self.cache_file_enhanced(change.file_path, force=True)
         
-        logger.info(f"Fortris updated cache for {len(changes)} changed files")
+        logger.info(f"claude updated cache for {len(changes)} changed files")
     
     def warm_cache_parallel(self, patterns: List[str], max_workers: int = None) -> Dict[str, Any]:
-        """Parallel cache warming for large codebases using Fortris"""
+        """Parallel cache warming for large codebases using claude"""
         start_time = time.time()
         max_workers = max_workers or self.config.get("parallel_workers", 8)
         
@@ -816,7 +816,7 @@ class FortrisSecurityCache:
                         total_size += entry.size
                         vulnerabilities_found += len(entry.vulnerabilities)
                 except Exception as e:
-                    logger.error(f"Fortris error caching {file_path}: {e}")
+                    logger.error(f"claude error caching {file_path}: {e}")
                     error_count += 1
         
         duration = time.time() - start_time
@@ -829,7 +829,7 @@ class FortrisSecurityCache:
             "duration_seconds": duration,
             "files_per_second": cached_count / duration if duration > 0 else 0,
             "vulnerabilities_detected": vulnerabilities_found,
-            "processed_by": "Fortris Security Cache v3.0"
+            "processed_by": "claude Security Cache v3.0"
         }
     
     def _should_cache_file(self, file_path: str) -> bool:
@@ -857,7 +857,7 @@ class FortrisSecurityCache:
             return False
     
     def get_security_report(self) -> Dict[str, Any]:
-        """Generate comprehensive Fortris security report"""
+        """Generate comprehensive claude security report"""
         with self._get_db_connection() as conn:
             # Overall statistics
             cursor = conn.execute('''
@@ -865,7 +865,7 @@ class FortrisSecurityCache:
                     COUNT(*) as total_files,
                     AVG(security_score) as avg_security_score,
                     COUNT(CASE WHEN security_score < 50 THEN 1 END) as high_risk_files
-                FROM fortris_cache
+                FROM claude_cache
             ''')
             stats = dict(cursor.fetchone())
             
@@ -875,7 +875,7 @@ class FortrisSecurityCache:
                     severity,
                     vulnerability_type,
                     COUNT(*) as count
-                FROM fortris_vulnerabilities
+                FROM claude_vulnerabilities
                 WHERE resolved = 0
                 GROUP BY severity, vulnerability_type
                 ORDER BY severity, count DESC
@@ -888,7 +888,7 @@ class FortrisSecurityCache:
                     path,
                     security_score,
                     vulnerabilities
-                FROM fortris_cache
+                FROM claude_cache
                 WHERE security_score < 70
                 ORDER BY security_score ASC
                 LIMIT 20
@@ -900,14 +900,14 @@ class FortrisSecurityCache:
                 "vulnerabilities": vulnerabilities,
                 "vulnerable_files": vulnerable_files,
                 "generated_at": datetime.now().isoformat(),
-                "generated_by": "Fortris Security Cache v3.0",
-                "fortris_analysis": True
+                "generated_by": "claude Security Cache v3.0",
+                "claude_analysis": True
             }
     
     def scan_all_vulnerabilities(self):
-        """Scan all cached files for vulnerabilities using Fortris"""
+        """Scan all cached files for vulnerabilities using claude"""
         with self._get_db_connection() as conn:
-            cursor = conn.execute('SELECT path FROM fortris_cache WHERE file_type = ?', 
+            cursor = conn.execute('SELECT path FROM claude_cache WHERE file_type = ?', 
                                 (FileType.SOURCE_CODE.value,))
             files = [row[0] for row in cursor.fetchall()]
         
@@ -924,7 +924,7 @@ class FortrisSecurityCache:
                     # Update security score
                     with self._get_db_connection() as conn:
                         conn.execute('''
-                            UPDATE fortris_cache 
+                            UPDATE claude_cache 
                             SET security_score = ?, vulnerabilities = ?
                             WHERE path = ?
                         ''', (score, json.dumps(vulns), file_path))
@@ -937,9 +937,9 @@ class FortrisSecurityCache:
                     updated_count += 1
                     
             except Exception as e:
-                logger.error(f"Fortris error scanning {file_path}: {e}")
+                logger.error(f"claude error scanning {file_path}: {e}")
         
-        logger.info(f"Fortris vulnerability scan completed: {updated_count} files scanned")
+        logger.info(f"claude vulnerability scan completed: {updated_count} files scanned")
     
     def get_cached_content(self, file_path: str) -> Optional[bytes]:
         """Retrieve cached content"""
@@ -966,7 +966,7 @@ class FortrisSecurityCache:
         try:
             with self._get_db_connection(entry.partition_key) as conn:
                 cursor = conn.execute(
-                    'SELECT content, compressed FROM fortris_partition_cache WHERE path = ?',
+                    'SELECT content, compressed FROM claude_partition_cache WHERE path = ?',
                     (entry.path,)
                 )
                 row = cursor.fetchone()
@@ -978,7 +978,7 @@ class FortrisSecurityCache:
                     return content
                     
         except Exception as e:
-            logger.error(f"Fortris error reading cached content: {e}")
+            logger.error(f"claude error reading cached content: {e}")
         
         return None
     
@@ -986,7 +986,7 @@ class FortrisSecurityCache:
         """Get cache entry from database"""
         with self._get_db_connection() as conn:
             cursor = conn.execute(
-                'SELECT * FROM fortris_cache WHERE path = ?',
+                'SELECT * FROM claude_cache WHERE path = ?',
                 (file_path,)
             )
             row = cursor.fetchone()
@@ -1016,7 +1016,7 @@ class FortrisSecurityCache:
         """Update access statistics"""
         with self._get_db_connection() as conn:
             conn.execute('''
-                UPDATE fortris_cache 
+                UPDATE claude_cache 
                 SET access_count = access_count + 1,
                     last_accessed = ?
                 WHERE path = ?
@@ -1032,7 +1032,7 @@ class FortrisSecurityCache:
         
         for partition_id, partition in self.partitions.items():
             with self._get_db_connection(partition_id) as conn:
-                cursor = conn.execute('SELECT COUNT(*) as count, SUM(size) as total_size FROM fortris_partition_cache')
+                cursor = conn.execute('SELECT COUNT(*) as count, SUM(size) as total_size FROM claude_partition_cache')
                 row = cursor.fetchone()
                 partition_stats[partition_id] = {
                     'count': row['count'] or 0,
@@ -1044,10 +1044,10 @@ class FortrisSecurityCache:
         if not sizes or max(sizes) / (min(sizes) + 1) < 2:
             return  # Partitions are reasonably balanced
         
-        logger.info("Fortris starting partition rebalancing...")
+        logger.info("claude starting partition rebalancing...")
     
     def get_performance_metrics(self) -> Dict[str, Any]:
-        """Get detailed Fortris performance metrics"""
+        """Get detailed claude performance metrics"""
         with self._stats_lock:
             hit_rate = (self.stats['cache_hits'] / 
                        (self.stats['cache_hits'] + self.stats.get('cache_misses', 1))) * 100
@@ -1060,15 +1060,15 @@ class FortrisSecurityCache:
             partition_sizes = {}
             for partition_id in self.partitions:
                 with self._get_db_connection(partition_id) as conn:
-                    cursor = conn.execute('SELECT COUNT(*) as count FROM fortris_partition_cache')
+                    cursor = conn.execute('SELECT COUNT(*) as count FROM claude_partition_cache')
                     partition_sizes[partition_id] = cursor.fetchone()['count']
             
             # Security metrics
             with self._get_db_connection() as conn:
-                cursor = conn.execute('SELECT AVG(security_score) as avg_score FROM fortris_cache')
+                cursor = conn.execute('SELECT AVG(security_score) as avg_score FROM claude_cache')
                 avg_security_score = cursor.fetchone()['avg_score'] or 100
                 
-                cursor = conn.execute('SELECT COUNT(*) as vuln_count FROM fortris_vulnerabilities WHERE resolved = 0')
+                cursor = conn.execute('SELECT COUNT(*) as vuln_count FROM claude_vulnerabilities WHERE resolved = 0')
                 active_vulnerabilities = cursor.fetchone()['vuln_count']
             
             metrics = {
@@ -1086,14 +1086,14 @@ class FortrisSecurityCache:
                 "cpu_workers": self._cpu_executor._max_workers,
                 "avg_security_score": avg_security_score,
                 "active_vulnerabilities": active_vulnerabilities,
-                "fortris_version": "3.0",
+                "claude_version": "3.0",
                 "enterprise_ready": True
             }
             
             # Store metrics
             with self._get_db_connection() as conn:
                 conn.execute('''
-                    INSERT INTO fortris_metrics
+                    INSERT INTO claude_metrics
                     (timestamp, cache_hits, cache_misses, avg_response_time_ms, 
                      memory_usage_mb, partition_balance, vulnerabilities_detected, security_score_avg)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -1132,13 +1132,13 @@ class FortrisSecurityCache:
         
         # Remove from partition
         with self._get_db_connection(entry.partition_key) as conn:
-            conn.execute('DELETE FROM fortris_partition_cache WHERE path = ?', (file_path,))
+            conn.execute('DELETE FROM claude_partition_cache WHERE path = ?', (file_path,))
             conn.commit()
         
         # Remove from main index
         with self._get_db_connection() as conn:
-            conn.execute('DELETE FROM fortris_cache WHERE path = ?', (file_path,))
-            conn.execute('DELETE FROM fortris_vulnerabilities WHERE file_path = ?', (file_path,))
+            conn.execute('DELETE FROM claude_cache WHERE path = ?', (file_path,))
+            conn.execute('DELETE FROM claude_vulnerabilities WHERE file_path = ?', (file_path,))
             conn.commit()
         
         # Remove from memory caches
@@ -1147,28 +1147,28 @@ class FortrisSecurityCache:
             self._ttl_cache.pop(file_path, None)
     
     def cleanup(self):
-        """Cleanup Fortris resources"""
+        """Cleanup claude resources"""
         self._io_executor.shutdown(wait=True)
         self._cpu_executor.shutdown(wait=True)
         
         for conn in self._db_pools.values():
             conn.close()
         
-        logger.info("Fortris Security Cache cleanup completed")
+        logger.info("claude Security Cache cleanup completed")
 
 
 # CLI Interface for testing
 if __name__ == "__main__":
     import argparse
     
-    parser = argparse.ArgumentParser(description="Fortris Security Cache System")
+    parser = argparse.ArgumentParser(description="claude Security Cache System")
     parser.add_argument("command", choices=["warm", "scan", "report", "metrics"])
     parser.add_argument("--patterns", nargs="+", help="File patterns to cache")
     parser.add_argument("--repo", help="Git repository path")
     
     args = parser.parse_args()
     
-    cache = FortrisSecurityCache()
+    cache = claudeSecurityCache()
     
     if args.command == "warm":
         if args.patterns:
@@ -1177,7 +1177,7 @@ if __name__ == "__main__":
     
     elif args.command == "scan":
         cache.scan_all_vulnerabilities()
-        print("Fortris vulnerability scan completed")
+        print("claude vulnerability scan completed")
     
     elif args.command == "report":
         report = cache.get_security_report()

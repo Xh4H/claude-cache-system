@@ -21,8 +21,8 @@ USAGE:
     claude <command> [options]
 
 COMMANDS:
-    start               Start security cache daemon
-    stop                Stop security cache daemon
+    start               Start claude security daemon
+    stop                Stop claude security daemon
     status              Check daemon status
     
     warm <patterns>     Warm cache with security analysis
@@ -38,6 +38,7 @@ COMMANDS:
     
     metrics             Show performance metrics
     health              Health check
+    info                Show claude system information
     
 EXAMPLES:
     claude start                          # Start claude daemon
@@ -56,6 +57,13 @@ SECURITY PATTERNS DETECTED:
     - Unsafe deserialization
     - CORS misconfigurations
 
+claude ENTERPRISE FEATURES:
+    - Real-time vulnerability detection
+    - Git-based incremental updates
+    - Intelligent cache partitioning
+    - Multi-level security scoring
+    - Comprehensive reporting
+
 EOF
 }
 
@@ -71,14 +79,15 @@ start_daemon() {
         return 0
     fi
     
-    echo -e "${BLUE}Starting claude security daemon...${NC}"
+    echo -e "${BLUE}🔒 Starting claude Security Daemon...${NC}"
     cd "$CACHE_DIR"
     python3 "$CACHE_DIR/claude_security_daemon.py" --daemon &
     
     sleep 2
     
     if is_daemon_running; then
-        echo -e "${GREEN}✓ claude security daemon started${NC}"
+        echo -e "${GREEN}✓ claude security daemon started successfully${NC}"
+        echo -e "${GREEN}✓ Enterprise security analysis ready${NC}"
         return 0
     else
         echo -e "${RED}✗ Failed to start claude daemon${NC}"
@@ -119,6 +128,7 @@ check_status() {
         fi
     else
         echo -e "${RED}✗ claude security daemon is not running${NC}"
+        echo -e "${YELLOW}Run 'claude start' to begin security analysis${NC}"
     fi
 }
 
@@ -136,24 +146,25 @@ case "$1" in
         check_status
         ;;
         
-    "warm")
+    "warm"|"w")
         shift
         if [ $# -eq 0 ]; then
             echo -e "${RED}Error: No patterns specified${NC}"
-            echo "Usage: csec warm <pattern1> [pattern2] ..."
+            echo "Usage: claude warm <pattern1> [pattern2] ..."
             exit 1
         fi
         
-        echo -e "${BLUE}Warming cache with claude security analysis...${NC}"
+        echo -e "${BLUE}🔍 Warming cache with claude security analysis...${NC}"
         python3 "$CACHE_DIR/claude_security_daemon.py" warm "$@"
         ;;
         
-    "scan")
-        echo -e "${BLUE}Running claude vulnerability scan...${NC}"
+    "scan"|"s")
+        echo -e "${BLUE}🔍 Running claude vulnerability scan...${NC}"
         python3 "$CACHE_DIR/claude_security_daemon.py" scan
         ;;
         
-    "report")
+    "report"|"r")
+        echo -e "${BLUE}📊 Generating claude security report...${NC}"
         python3 "$CACHE_DIR/claude_security_daemon.py" security-report
         ;;
         
@@ -164,12 +175,12 @@ case "$1" in
             exit 1
         fi
         
-        echo -e "${BLUE}Initializing claude git integration...${NC}"
+        echo -e "${BLUE}🔗 Initializing claude git integration...${NC}"
         python3 "$CACHE_DIR/claude_security_daemon.py" set-repo "$2"
         ;;
         
     "git-update")
-        echo -e "${BLUE}Updating claude cache from git changes...${NC}"
+        echo -e "${BLUE}🔄 Updating claude cache from git changes...${NC}"
         python3 "$CACHE_DIR/claude_security_daemon.py" git-update
         ;;
         
@@ -180,23 +191,35 @@ case "$1" in
             exit 1
         fi
         
-        echo -e "${BLUE}claude scanning pull request #$2...${NC}"
+        echo -e "${BLUE}🔍 claude scanning pull request #$2...${NC}"
         # This would need integration with GitHub/GitLab API
         echo "claude PR scanning requires additional configuration"
+        echo "Contact your administrator for GitHub/GitLab integration setup"
         ;;
         
     "find-vulns")
-        echo -e "${BLUE}claude finding vulnerabilities...${NC}"
-        # This would query the vulnerabilities table
-        echo "claude vulnerability search coming soon"
+        echo -e "${BLUE}🎯 claude vulnerability search...${NC}"
+        python3 "$CACHE_DIR/claude_security_daemon.py" vulnerabilities
         ;;
         
-    "metrics")
+    "fix-suggestions")
+        echo -e "${BLUE}💡 claude fix suggestions...${NC}"
+        echo "This feature is coming in a future claude update"
+        ;;
+        
+    "metrics"|"m")
+        echo -e "${BLUE}📈 claude performance metrics:${NC}"
         python3 "$CACHE_DIR/claude_security_daemon.py" stats
         ;;
         
-    "health")
+    "health"|"h")
+        echo -e "${BLUE}🏥 claude health check:${NC}"
         python3 "$CACHE_DIR/claude_security_daemon.py" health
+        ;;
+        
+    "info"|"i")
+        echo -e "${BLUE}ℹ️  claude system information:${NC}"
+        python3 "$CACHE_DIR/claude_security_daemon.py" info
         ;;
         
     "help"|"--help"|"-h"|"")
@@ -204,7 +227,10 @@ case "$1" in
         ;;
         
     *)
-        echo -e "${RED}Unknown command: $1${NC}"
+        echo -e "${RED}Unknown claude command: $1${NC}"
+        echo ""
+        echo -e "${BLUE}🔒 claude Security Cache System v3.0${NC}"
+        echo -e "${BLUE}Advanced security analysis for enterprise codebases${NC}"
         echo ""
         print_help
         exit 1

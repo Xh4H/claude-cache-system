@@ -1,9 +1,9 @@
 #!/bin/bash
-# Fortris Security Cache System - Enterprise Setup Script
+# claude Security Cache System - Enterprise Setup Script
 
 set -e
 
-echo "🔒 Fortris Security Cache System v3.0 - Enterprise Setup"
+echo "🔒 claude Security Cache System v3.0 - Enterprise Setup"
 echo "======================================================="
 echo ""
 
@@ -37,9 +37,9 @@ print_warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
-# Step 1: Create Fortris directory structure
+# Step 1: Create claude directory structure
 setup_directories() {
-    print_status "Creating Fortris directory structure in Claude folder..."
+    print_status "Creating claude directory structure in Claude folder..."
     
     mkdir -p "$CLAUDE_DIR"/{cache,config,logs,scripts,backups,reports}
     mkdir -p "$CACHE_DIR"/{files,partitions}
@@ -52,7 +52,7 @@ setup_directories() {
 
 # Step 2: Install Python dependencies
 install_dependencies() {
-    print_status "Installing Python dependencies for Fortris..."
+    print_status "Installing Python dependencies for claude..."
     
     # Check if Python 3 is available
     if ! command -v python3 &> /dev/null; then
@@ -79,33 +79,33 @@ install_dependencies() {
     print_success "Dependencies installed"
 }
 
-# Step 3: Copy Fortris files
-setup_fortris_files() {
-    print_status "Setting up Fortris system files..."
+# Step 3: Copy claude files
+setup_claude_files() {
+    print_status "Setting up claude system files..."
     
     # Copy main cache files
-    cp fortris_security_cache.py "$CACHE_DIR/"
-    cp fortris_security_daemon.py "$CACHE_DIR/"
-    cp fortris_config.json "$CONFIG_DIR/"
+    cp claude_security_cache.py "$CACHE_DIR/"
+    cp claude_security_daemon.py "$CACHE_DIR/"
+    cp claude_config.json "$CONFIG_DIR/"
     
     # Copy scripts
-    cp scripts/fortris "$SCRIPTS_DIR/"
-    cp scripts/fortris-warm-strategies.sh "$SCRIPTS_DIR/"
+    cp scripts/claude "$SCRIPTS_DIR/"
+    cp scripts/claude-warm-strategies.sh "$SCRIPTS_DIR/"
     
     # Make scripts executable
-    chmod +x "$SCRIPTS_DIR/fortris"
-    chmod +x "$SCRIPTS_DIR/fortris-warm-strategies.sh"
+    chmod +x "$SCRIPTS_DIR/claude"
+    chmod +x "$SCRIPTS_DIR/claude-warm-strategies.sh"
     
-    print_success "Fortris files installed"
+    print_success "claude files installed"
 }
 
 # Step 4: Create configuration
 setup_configuration() {
-    print_status "Creating Fortris configuration..."
+    print_status "Creating claude configuration..."
     
     # Create main config if it doesn't exist
-    if [ ! -f "$CONFIG_DIR/fortris_security.json" ]; then
-        cat > "$CONFIG_DIR/fortris_security.json" << 'EOF'
+    if [ ! -f "$CONFIG_DIR/claude_security.json" ]; then
+        cat > "$CONFIG_DIR/claude_security.json" << 'EOF'
 {
   "allowed_dirs": [
     "/home/$USER",
@@ -120,7 +120,7 @@ setup_configuration() {
   "parallel_workers": 8,
   "daemon_port": 19849,
   "log_level": "INFO",
-  "fortris_enterprise": true
+  "claude_enterprise": true
 }
 EOF
     fi
@@ -133,23 +133,23 @@ setup_shell_integration() {
     print_status "Setting up shell integration..."
     
     # Add to PATH
-    if ! grep -q "CLAUDE_FORTRIS" ~/.bashrc; then
+    if ! grep -q "CLAUDE_claude" ~/.bashrc; then
         cat >> ~/.bashrc << 'EOF'
 
-# Fortris Security Cache System (Claude Integration)
+# claude Security Cache System (Claude Integration)
 export CLAUDE_HOME="$HOME/.claude"
 export PATH="$CLAUDE_HOME/scripts:$PATH"
 
-# Fortris aliases
-alias fortris-start='fortris start'
-alias fortris-stop='fortris stop'
-alias fortris-status='fortris status'
-alias fortris-scan='fortris scan'
-alias fortris-report='fortris report'
+# claude aliases
+alias claude-start='claude start'
+alias claude-stop='claude stop'
+alias claude-status='claude status'
+alias claude-scan='claude scan'
+alias claude-report='claude report'
 
-# Auto-start Fortris daemon (optional)
-# if ! pgrep -f "fortris_security_daemon.py" > /dev/null; then
-#     fortris start > /dev/null 2>&1 &
+# Auto-start claude daemon (optional)
+# if ! pgrep -f "claude_security_daemon.py" > /dev/null; then
+#     claude start > /dev/null 2>&1 &
 # fi
 EOF
     fi
@@ -159,9 +159,9 @@ EOF
 
 # Step 6: Initialize security patterns
 setup_security_patterns() {
-    print_status "Setting up Fortris security patterns..."
+    print_status "Setting up claude security patterns..."
     
-    cat > "$CONFIG_DIR/fortris_patterns.json" << 'EOF'
+    cat > "$CONFIG_DIR/claude_patterns.json" << 'EOF'
 {
   "version": "3.0",
   "patterns": [
@@ -202,11 +202,11 @@ EOF
 
 # Step 7: Create logging configuration
 setup_logging() {
-    print_status "Setting up Fortris logging..."
+    print_status "Setting up claude logging..."
     
     cat > "$CONFIG_DIR/logging.conf" << 'EOF'
 [loggers]
-keys=root,fortris
+keys=root,claude
 
 [handlers]
 keys=consoleHandler,fileHandler
@@ -218,10 +218,10 @@ keys=simpleFormatter
 level=INFO
 handlers=consoleHandler
 
-[logger_fortris]
+[logger_claude]
 level=INFO
 handlers=consoleHandler,fileHandler
-qualname=fortris
+qualname=claude
 propagate=0
 
 [handler_consoleHandler]
@@ -234,10 +234,10 @@ args=(sys.stdout,)
 class=FileHandler
 level=INFO
 formatter=simpleFormatter
-args=('~/.claude/logs/fortris.log',)
+args=('~/.claude/logs/claude.log',)
 
 [formatter_simpleFormatter]
-format=%(asctime)s - Fortris - %(levelname)s - %(message)s
+format=%(asctime)s - claude - %(levelname)s - %(message)s
 EOF
     
     print_success "Logging configuration created"
@@ -245,14 +245,14 @@ EOF
 
 # Step 8: Verify installation
 verify_installation() {
-    print_status "Verifying Fortris installation..."
+    print_status "Verifying claude installation..."
     
     # Check if all files exist
     local files=(
-        "$CACHE_DIR/fortris_security_cache.py"
-        "$CACHE_DIR/fortris_security_daemon.py"
-        "$CONFIG_DIR/fortris_config.json"
-        "$SCRIPTS_DIR/fortris"
+        "$CACHE_DIR/claude_security_cache.py"
+        "$CACHE_DIR/claude_security_daemon.py"
+        "$CONFIG_DIR/claude_config.json"
+        "$SCRIPTS_DIR/claude"
     )
     
     for file in "${files[@]}"; do
@@ -272,12 +272,12 @@ verify_installation() {
 
 # Main installation process
 main() {
-    echo "Starting Fortris Security Cache System installation..."
+    echo "Starting claude Security Cache System installation..."
     echo ""
     
     setup_directories
     install_dependencies
-    setup_fortris_files
+    setup_claude_files
     setup_configuration
     setup_shell_integration
     setup_security_patterns
@@ -285,19 +285,19 @@ main() {
     verify_installation
     
     echo ""
-    echo -e "${GREEN}🔒 Fortris Security Cache System v3.0 installation complete!${NC}"
+    echo -e "${GREEN}🔒 claude Security Cache System v3.0 installation complete!${NC}"
     echo ""
     echo "Next steps:"
     echo "1. Reload your shell: source ~/.bashrc"
-    echo "2. Start Fortris: fortris start"
-    echo "3. Check status: fortris status"
-    echo "4. Warm cache: fortris warm \"**/*.py\""
-    echo "5. Generate report: fortris report"
+    echo "2. Start claude: claude start"
+    echo "3. Check status: claude status"
+    echo "4. Warm cache: claude warm \"**/*.py\""
+    echo "5. Generate report: claude report"
     echo ""
-    echo "For interactive warming strategies: fortris-warm-strategies.sh"
-    echo "For help: fortris help"
+    echo "For interactive warming strategies: claude-warm-strategies.sh"
+    echo "For help: claude help"
     echo ""
-    echo -e "${BLUE}Fortris is ready for enterprise security analysis!${NC}"
+    echo -e "${BLUE}claude is ready for enterprise security analysis!${NC}"
 }
 
 # Run main installation

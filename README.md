@@ -1,8 +1,8 @@
-# Fortris Security Cache System - Enterprise Setup Guide
+# claude Security Cache System - Enterprise Setup Guide
 
 ## Overview
 
-**Fortris Security Cache** is a high-performance local caching solution specifically designed for **enterprise security analysis of large codebases**. Built for security teams who need to efficiently analyze massive repositories, Fortris accelerates code analysis operations by up to 40x while providing:
+**claude Security Cache** is a high-performance local caching solution specifically designed for **enterprise security analysis of large codebases**. Built for security teams who need to efficiently analyze massive repositories, claude accelerates code analysis operations by up to 40x while providing:
 
 - **Real-time vulnerability detection** during caching
 - **Git-based incremental updates** for efficient CI/CD integration
@@ -77,14 +77,14 @@ pip3 install --user aiohttp psutil jsonschema pyyaml croniter crontab GitPython 
 
 ## Installation Guide
 
-### Step 1: Clone or Extract Fortris Repository
+### Step 1: Clone or Extract claude Repository
 ```bash
 # If using git
-git clone <repository-url> ~/fortris-security-cache
+git clone <repository-url> ~/claude-security-cache
 # OR extract the provided archive
-tar -xzf fortris-security-cache.tar.gz -C ~/
+tar -xzf claude-security-cache.tar.gz -C ~/
 
-cd ~/fortris-security-cache
+cd ~/claude-security-cache
 ```
 
 ### Step 2: Run Initial Setup
@@ -100,9 +100,9 @@ source ~/.bashrc
 ```
 
 ### Step 3: Configure Allowed Directories (IMPORTANT for Corporate Use)
-Edit the Fortris cache configuration file:
+Edit the claude cache configuration file:
 ```bash
-# Create Fortris configuration file
+# Create claude configuration file
 mkdir -p ~/.claude/config
 cat > ~/.claude/config/cache.json << 'EOF'
 {
@@ -121,19 +121,19 @@ EOF
 
 Replace the paths in `allowed_dirs` with your actual project directories.
 
-### Step 4: Start the Fortris Security Daemon
+### Step 4: Start the claude Security Daemon
 ```bash
-# Start the Fortris security cache daemon
-python3 ~/.claude/cache/fortris_security_daemon.py --daemon &
+# Start the claude security cache daemon
+python3 ~/.claude/cache/claude_security_daemon.py --daemon &
 
 # Or use the convenient command
-fortris start
+claude start
 
 # Verify it's running
-fortris status
+claude status
 
 # Expected output:
-# ✅ Fortris security daemon is running
+# ✅ claude security daemon is running
 # ✅ Database is accessible
 # ✅ Cache directory exists
 # ✅ Security patterns loaded
@@ -142,15 +142,15 @@ fortris status
 ### Step 5: Set Up Automatic Startup (Optional)
 ```bash
 # Add to your shell profile (~/.bashrc or ~/.zshrc)
-echo '# Auto-start Fortris Security daemon' >> ~/.bashrc
-echo 'if ! pgrep -f "fortris_security_daemon.py" > /dev/null; then' >> ~/.bashrc
-echo '    python3 ~/.claude/cache/fortris_security_daemon.py --daemon &' >> ~/.bashrc
+echo '# Auto-start claude Security daemon' >> ~/.bashrc
+echo 'if ! pgrep -f "claude_security_daemon.py" > /dev/null; then' >> ~/.bashrc
+echo '    python3 ~/.claude/cache/claude_security_daemon.py --daemon &' >> ~/.bashrc
 echo 'fi' >> ~/.bashrc
 ```
 
 ## Configuration
 
-### Fortris Cache Configuration Options
+### claude Cache Configuration Options
 
 Edit `~/.claude/config/cache.json`:
 
@@ -205,33 +205,33 @@ For large codebases, adjust these settings:
 #### Primary Security Commands
 ```bash
 # Start security analysis
-fortris start                    # Start Fortris security daemon
-fortris warm "src/**/*.py"      # Cache with vulnerability analysis
-fortris scan                    # Full vulnerability scan
-fortris report                  # Generate security report
+claude start                    # Start claude security daemon
+claude warm "src/**/*.py"      # Cache with vulnerability analysis
+claude scan                    # Full vulnerability scan
+claude report                  # Generate security report
 
 # Git integration
-fortris git-init /path/to/repo  # Enable git tracking
-fortris git-update              # Update from git changes
+claude git-init /path/to/repo  # Enable git tracking
+claude git-update              # Update from git changes
 
 # Monitoring
-fortris health                  # System health check
-fortris metrics                 # Performance metrics
+claude health                  # System health check
+claude metrics                 # Performance metrics
 ```
 
 #### Security-Focused Cache Warming
 ```bash
 # Use intelligent warming strategies
-./scripts/fortris-warm-strategies.sh
+./scripts/claude-warm-strategies.sh
 
 # Quick security-focused warming
-fortris warm \
+claude warm \
   "**/auth*.py" "**/security*.py" \
   "**/config*.py" "**/settings*.py" \
   "**/*.sql" "**/models*.py"
 
 # Warm by risk level (high-risk files first)
-fortris warm "**/password*" "**/secret*" "**/api*"
+claude warm "**/password*" "**/secret*" "**/api*"
 ```
 
 #### Legacy Commands (Still Available)
@@ -248,34 +248,34 @@ chealth                       # Basic health check
 1. **Initial Security Setup**
 ```bash
 cd /path/to/your/codebase
-fortris start                           # Start Fortris security daemon
-fortris git-init $(pwd)                # Enable git integration
-./scripts/fortris-warm-strategies.sh   # Interactive warming
-fortris report > security-baseline.json # Baseline report
+claude start                           # Start claude security daemon
+claude git-init $(pwd)                # Enable git integration
+./scripts/claude-warm-strategies.sh   # Interactive warming
+claude report > security-baseline.json # Baseline report
 ```
 
 2. **Daily Security Analysis**
 ```bash
 # Incremental updates from git
-fortris git-update
+claude git-update
 
 # Quick vulnerability check
-fortris scan
+claude scan
 
 # Monitor security metrics
-fortris metrics | grep security
+claude metrics | grep security
 ```
 
 3. **CI/CD Integration**
 ```bash
 # In your CI pipeline
-fortris git-update --base origin/main --target HEAD
-fortris scan
-fortris report > security-report-$BUILD_ID.json
+claude git-update --base origin/main --target HEAD
+claude scan
+claude report > security-report-$BUILD_ID.json
 
 # Check for new vulnerabilities
 if [ $(jq '.summary.high_risk_files' security-report-$BUILD_ID.json) -gt 0 ]; then
-  echo "❌ New security issues detected by Fortris"
+  echo "❌ New security issues detected by claude"
   exit 1
 fi
 ```
@@ -285,9 +285,9 @@ fi
 ### Setting Up Git Integration
 ```bash
 # Initialize git integration for a repository
-fortris git-init /path/to/your/repo
+claude git-init /path/to/your/repo
 
-# Fortris will now track:
+# claude will now track:
 # - File changes via git SHA hashes
 # - Commit-based incremental updates
 # - Branch-specific vulnerability tracking
@@ -296,9 +296,9 @@ fortris git-init /path/to/your/repo
 ### Git-Based Updates
 ```bash
 # Update cache based on git changes
-fortris git-update                    # Compare HEAD~1 to HEAD
-fortris git-update --base main        # Compare main to HEAD
-fortris git-update --base HEAD~5      # Compare HEAD~5 to HEAD
+claude git-update                    # Compare HEAD~1 to HEAD
+claude git-update --base main        # Compare main to HEAD
+claude git-update --base HEAD~5      # Compare HEAD~5 to HEAD
 
 # Automatic updates (runs every 5 minutes)
 # Background worker automatically detects git changes
@@ -307,10 +307,10 @@ fortris git-update --base HEAD~5      # Compare HEAD~5 to HEAD
 ### Pull Request Analysis
 ```bash
 # Analyze changes in a specific commit range
-fortris git-update --base $PR_BASE --target $PR_HEAD
+claude git-update --base $PR_BASE --target $PR_HEAD
 
 # Generate PR-specific security report
-fortris report --format json > pr-security-$PR_ID.json
+claude report --format json > pr-security-$PR_ID.json
 ```
 
 ## Vulnerability Detection
@@ -352,13 +352,13 @@ fortris report --format json > pr-security-$PR_ID.json
 ### Vulnerability Management
 ```bash
 # Find all critical vulnerabilities
-fortris find-vulns --severity CRITICAL
+claude find-vulns --severity CRITICAL
 
 # Get vulnerabilities by type
-fortris find-vulns --type "SQL injection"
+claude find-vulns --type "SQL injection"
 
 # Export vulnerability data
-fortris report --vulnerabilities-only > vulns.json
+claude report --vulnerabilities-only > vulns.json
 ```
 
 ## Monitoring & Maintenance
@@ -375,7 +375,7 @@ cviz files    # File-level analysis
 
 2. **Log Monitoring**
 ```bash
-# View Fortris logs
+# View claude logs
 tail -f ~/.claude/logs/cache.log
 
 # Check for errors
@@ -385,7 +385,7 @@ grep ERROR ~/.claude/logs/cache.log
 3. **Resource Usage**
 ```bash
 # Check memory usage
-ps aux | grep fortris_security_daemon
+ps aux | grep claude_security_daemon
 
 # Check disk usage
 du -sh ~/.claude/cache/
@@ -411,8 +411,8 @@ claude-cache optimize
 vim ~/.claude/config/cache.json
 
 # Clear and rebuild cache if needed
-fortris clear --confirm
-fortris warm "**/*"
+claude clear --confirm
+claude warm "**/*"
 ```
 
 ## Troubleshooting
@@ -452,21 +452,21 @@ cat ~/.claude/config/cache.json | grep allowed_dirs
 
 ### Debug Mode
 ```bash
-# Run Fortris daemon in foreground with debug logging
-python3 ~/.claude/cache/fortris_security_daemon.py --log-level DEBUG
+# Run claude daemon in foreground with debug logging
+python3 ~/.claude/cache/claude_security_daemon.py --log-level DEBUG
 ```
 
 ## Enterprise Considerations
 
 ### 1. Compliance & Auditing
-- All Fortris operations are logged to `~/.claude/logs/cache.log`
+- All claude operations are logged to `~/.claude/logs/cache.log`
 - Implement log rotation: `logrotate -f ~/.claude/config/logrotate.conf`
 - Regular audit reviews of cached content and security findings
 
 ### 2. Resource Limits
 ```bash
 # Set memory limits in systemd (if using systemd)
-# /etc/systemd/system/fortris-security.service
+# /etc/systemd/system/claude-security.service
 [Service]
 MemoryLimit=2G
 CPUQuota=50%
@@ -489,7 +489,7 @@ pytest  # Will automatically benefit from cache
 ```
 
 ### 5. Backup Considerations
-The Fortris cache is ephemeral and can be rebuilt:
+The claude cache is ephemeral and can be rebuilt:
 ```bash
 # No need to backup cache files
 # Exclude from backups: ~/.claude/cache/
@@ -499,10 +499,10 @@ The Fortris cache is ephemeral and can be rebuilt:
 ### 6. Monitoring Integration
 ```bash
 # Export metrics for monitoring systems
-fortris metrics --format json > /var/log/fortris-security-metrics.json
+claude metrics --format json > /var/log/claude-security-metrics.json
 
 # Set up alerts for:
-# - Fortris daemon not running
+# - claude daemon not running
 # - Cache hit rate < 80%
 # - New critical vulnerabilities detected
 # - Disk usage > 2GB
@@ -512,14 +512,14 @@ fortris metrics --format json > /var/log/fortris-security-metrics.json
 
 For issues or questions:
 1. Check logs: `~/.claude/logs/cache.log`
-2. Run health check: `fortris health`
+2. Run health check: `claude health`
 3. Review this documentation
 4. Contact your IT administrator
 
 ## Version
-Fortris Security Cache System v3.0
+claude Security Cache System v3.0
 Last Updated: 2025-01-02
 
 ---
 
-**Fortris** - Advanced Security Analysis for Enterprise Codebases
+**claude** - Advanced Security Analysis for Enterprise Codebases
